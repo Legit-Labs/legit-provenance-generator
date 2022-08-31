@@ -22,7 +22,7 @@ env:
   BUILDER_BINARY: slsa-generator-generic-linux-amd64 # Name of the binary in the release assets.
   BUILDER_DIR: internal/builders/generic # Source directory if we compile the builder.
   ATTESTATION_NAME: provenance.intoto.jsonl # The final attestation name.
-  LEGIT_ENDPOINT_URL: http://ec2-3-235-247-92.compute-1.amazonaws.com:10000
+  LEGIT_ENDPOINT_URL: http://ec2-44-193-210-145.compute-1.amazonaws.com:10000
 
 on:
   workflow_call:
