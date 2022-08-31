@@ -26,12 +26,12 @@ import (
 
 	intoto "github.com/in-toto/in-toto-golang/in_toto"
 	slsav02 "github.com/in-toto/in-toto-golang/in_toto/slsa_provenance/v0.2"
+	legitattest "github.com/legit-labs/legit-attest"
 	"github.com/spf13/cobra"
 
 	"github.com/slsa-framework/slsa-github-generator/github"
 	"github.com/slsa-framework/slsa-github-generator/internal/errors"
 	"github.com/slsa-framework/slsa-github-generator/internal/utils"
-	"github.com/slsa-framework/slsa-github-generator/signing/sigstore"
 	"github.com/slsa-framework/slsa-github-generator/slsa"
 )
 
@@ -197,18 +197,11 @@ run in the context of a Github Actions workflow.`,
 					attBytes, err = json.Marshal(p)
 					check(err)
 				} else {
-					s := sigstore.NewDefaultFulcio()
-					att, err := s.Sign(ctx, &intoto.Statement{
-						StatementHeader: p.StatementHeader,
-						Predicate:       p.Predicate,
-					})
-					check(err)
 
-					r := sigstore.NewDefaultRekor()
-					_, err = r.Upload(ctx, att)
+					// Sign the provenance.
+					att, err := legitattest.Attest(p)
 					check(err)
-
-					attBytes = att.Bytes()
+					attBytes = att
 				}
 
 				f, err := utils.CreateNewFileUnderCurrentDirectory(attPath, os.O_WRONLY)
