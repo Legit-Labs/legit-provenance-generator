@@ -24,6 +24,8 @@ import (
 
 	intoto "github.com/in-toto/in-toto-golang/in_toto"
 	slsa02 "github.com/in-toto/in-toto-golang/in_toto/slsa_provenance/v0.2"
+
+	legitattest "github.com/legit-labs/legit-attest"
 	"github.com/slsa-framework/slsa-github-generator/github"
 	"github.com/slsa-framework/slsa-github-generator/internal/utils"
 	"github.com/slsa-framework/slsa-github-generator/slsa"
@@ -64,7 +66,7 @@ func (b *goProvenanceBuild) BuildConfig(context.Context) (interface{}, error) {
 // GenerateProvenance translates github context into a SLSA provenance
 // attestation.
 // Spec: https://slsa.dev/provenance/v0.2
-func GenerateProvenance(name, digest, command, envs, workingDir string, s signing.Signer, r signing.TransparencyLog) ([]byte, error) {
+func GenerateProvenance(name, digest, command, envs, workingDir string, r signing.TransparencyLog) ([]byte, error) {
 	gh, err := github.GetWorkflowContext()
 	if err != nil {
 		return nil, err
@@ -154,19 +156,10 @@ func GenerateProvenance(name, digest, command, envs, workingDir string, s signin
 	}
 
 	// Sign the provenance.
-	att, err := s.Sign(ctx, &intoto.Statement{
-		StatementHeader: p.StatementHeader,
-		Predicate:       p.Predicate,
-	})
+	att, err := legitattest.Attest(p)
 	if err != nil {
 		return nil, err
 	}
 
-	// Upload the signed attestation to rekor.
-	if logEntry, err := r.Upload(ctx, att); err != nil {
-		fmt.Printf("Uploaded signed attestation to rekor with UUID %s.\n", logEntry.UUID())
-		return nil, err
-	}
-
-	return att.Bytes(), nil
+	return att, nil
 }

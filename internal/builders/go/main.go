@@ -76,14 +76,13 @@ func runBuild(dry bool, configFile, evalEnvs string) error {
 
 func runProvenanceGeneration(subject, digest, commands, envs, workingDir, rekor string) error {
 	r := sigstore.NewRekor(rekor)
-	s := sigstore.NewDefaultFulcio()
 	attBytes, err := pkg.GenerateProvenance(subject, digest,
-		commands, envs, workingDir, s, r)
+		commands, envs, workingDir, r)
 	if err != nil {
 		return err
 	}
 
-	filename := fmt.Sprintf("%s.intoto.jsonl", subject)
+	filename := fmt.Sprintf("%s.provenance.intoto.jsonl", subject)
 	f, err := utils.CreateNewFileUnderCurrentDirectory(filename, os.O_WRONLY)
 	if err != nil {
 		return err
