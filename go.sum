@@ -1212,6 +1212,8 @@ github.com/legit-labs/legit-attest v0.0.0-20220905135102-0490b46156a4 h1:4SUdb9V
 github.com/legit-labs/legit-attest v0.0.0-20220905135102-0490b46156a4/go.mod h1:6HzwZH9pzBtNcz4wxHTp8CrKj5OuXmkat2CpXXwqchM=
 github.com/legit-labs/legit-attest v0.0.0-20220905141127-c321cd16ccda h1:RvI4B0xoY6p9LOYlapu2rp4aNMYNlFkeyUH3qIruXxs=
 github.com/legit-labs/legit-attest v0.0.0-20220905141127-c321cd16ccda/go.mod h1:6HzwZH9pzBtNcz4wxHTp8CrKj5OuXmkat2CpXXwqchM=
+github.com/legit-labs/legit-attest v0.0.0-20220905141734-908ec04ea465 h1:9AoGED56JgkIjjs5yiUdSu1792gGYZNTzMMz9JrSShk=
+github.com/legit-labs/legit-attest v0.0.0-20220905141734-908ec04ea465/go.mod h1:6HzwZH9pzBtNcz4wxHTp8CrKj5OuXmkat2CpXXwqchM=
 github.com/legit-labs/legit-attest v0.0.0 h1:q6hNwybUZlOl/h6xM50IldvwtKpaUdMHAB+pPbDJ8Ec=
 github.com/legit-labs/legit-attest v0.0.0/go.mod h1:6HzwZH9pzBtNcz4wxHTp8CrKj5OuXmkat2CpXXwqchM=
 github.com/leodido/go-urn v1.2.1 h1:BqpAaACuzVSgi/VLzGZIobT2z4v53pjosyNd9Yv6n/w=
