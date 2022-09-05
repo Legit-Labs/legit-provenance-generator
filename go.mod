@@ -9,7 +9,7 @@ require (
 	github.com/google/go-cmp v0.5.8
 	github.com/google/go-github/v44 v44.1.0
 	github.com/in-toto/in-toto-golang v0.3.4-0.20220709202702-fa494aaa0add
-	github.com/legit-labs/legit-attest v0.0.0-20220905135102-0490b46156a4
+	github.com/legit-labs/legit-attest v0.0.0-20220905141127-c321cd16ccda
 	github.com/secure-systems-lab/go-securesystemslib v0.4.0
 	github.com/sigstore/cosign v1.10.0
 	github.com/sigstore/rekor v0.10.0
