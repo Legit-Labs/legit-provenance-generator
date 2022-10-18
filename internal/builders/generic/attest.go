@@ -20,6 +20,7 @@ import (
 	"context"
 	"encoding/base64"
 	"encoding/json"
+	"io"
 	"os"
 	"regexp"
 	"strings"
@@ -211,16 +212,19 @@ run in the context of a Github Actions workflow.`,
 				check(err)
 			}
 
+			pb, err := json.Marshal(p.Predicate)
+			check(err)
+
+			var pf io.Writer
 			if predicatePath != "" {
-				pb, err := json.Marshal(p.Predicate)
+				pf, err = utils.CreateNewFileUnderCurrentDirectory(predicatePath, os.O_WRONLY)
 				check(err)
-
-				pf, err := utils.CreateNewFileUnderCurrentDirectory(predicatePath, os.O_WRONLY)
-				check(err)
-
-				_, err = pf.Write(pb)
-				check(err)
+			} else {
+				pf = os.Stdout
 			}
+
+			_, err = pf.Write(pb)
+			check(err)
 		},
 	}
 
