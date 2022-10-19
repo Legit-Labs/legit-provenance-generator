@@ -39,6 +39,7 @@ func attestCmd(provider slsa.ClientProvider, check func(error),
 ) *cobra.Command {
 	var attPath string
 	var subjects string
+	var unsignedToStdout bool
 
 	c := &cobra.Command{
 		Use:   "attest",
@@ -58,21 +59,22 @@ run in the context of a Github Actions workflow.`,
 				check(errors.New("expected at least one subject"))
 			}
 
-			// NOTE: The provenance file path is untrusted and should be
-			// validated. This is done by CreateNewFileUnderCurrentDirectory.
-			if attPath == "" {
-				if len(parsedSubjects) == 1 {
-					filename := path.Base(parsedSubjects[0].Name)
-					attPath = fmt.Sprintf("%s.intoto.jsonl", filename)
-				} else {
-					// len(parsedSubjects) > 1
-					attPath = "multiple.intoto.jsonl"
+			if !unsignedToStdout {
+				// NOTE: The provenance file path is untrusted and should be
+				// validated. This is done by CreateNewFileUnderCurrentDirectory.
+				if attPath == "" {
+					if len(parsedSubjects) == 1 {
+						attPath = fmt.Sprintf("%s.intoto.jsonl", parsedSubjects[0].Name)
+					} else {
+						// len(parsedSubjects) > 1
+						attPath = "multiple.intoto.jsonl"
+					}
 				}
-			}
 
-			// Verify the extension path and extension.
-			err = utils.VerifyAttestationPath(attPath)
-			check(err)
+				// Verify the extension path and extension.
+				err = utils.VerifyAttestationPath(attPath)
+				check(err)
+			}
 
 			ctx := context.Background()
 
@@ -101,6 +103,14 @@ run in the context of a Github Actions workflow.`,
 
 			p, err := g.Generate(ctx)
 			check(err)
+
+			if unsignedToStdout {
+				pBytes, err := json.Marshal(p)
+				check(err)
+				_, err = os.Stdout.Write(pBytes)
+				check(err)
+				return
+			}
 
 			// Note: the path is validated within CreateNewFileUnderCurrentDirectory().
 			var attBytes []byte
@@ -132,14 +142,9 @@ run in the context of a Github Actions workflow.`,
 		},
 	}
 
-	c.Flags().StringVarP(
-		&attPath, "signature", "g", "",
-		"Path to write the signed provenance.",
-	)
-	c.Flags().StringVarP(
-		&subjects, "subjects", "s", "",
-		"Formatted list of subjects in the same format as sha256sum (base64 encoded).",
-	)
+	c.Flags().BoolVarP(&unsignedToStdout, "unsigned-to-stdout", "", false, "Whether or not to output the unsigned provenance to stdout instead of signing.")
+	c.Flags().StringVarP(&attPath, "signature", "g", "", "Path to write the signed provenance.")
+	c.Flags().StringVarP(&subjects, "subjects", "s", "", "Formatted list of subjects in the same format as sha256sum (base64 encoded).")
 
 	return c
 }
