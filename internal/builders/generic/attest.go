@@ -20,7 +20,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
-	"path"
 
 	intoto "github.com/in-toto/in-toto-golang/in_toto"
 	"github.com/spf13/cobra"
